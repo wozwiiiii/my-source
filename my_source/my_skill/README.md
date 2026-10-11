@@ -1,6 +1,6 @@
 # 校招求职 Skill 合集
 
-5 个从真实求职工作流中精简提炼的 AI Skill，覆盖「经历提炼 → 简历优化 → 简历持续维护 → 笔试备考 → 面试备考」全链路。适用于 WorkBuddy、Claude Code 等支持 SKILL.md 加载的 AI 助手环境，也可将 SKILL.md 全文作为系统提示词直接使用。
+7 个从真实求职与内容创作工作流中精简提炼的 AI Skill，覆盖「经历提炼 → 简历优化 → 简历持续维护 → 笔试备考 → 面试备考」求职全链路，外加「项目代码问答」与「B 站发布物料生成」两个通用工作流 Skill。适用于 WorkBuddy、Claude Code 等支持 SKILL.md 加载的 AI 助手环境，也可将 SKILL.md 全文作为系统提示词直接使用。
 
 ## 需求路由表：我该用哪个？
 
@@ -11,6 +11,8 @@
 | 定期审核多版本简历 + 用代码核实数据 | `resume-continuous-optimizer` | "审核我的简历，核实里面的数字" |
 | 生成校招笔试题（书面作答） | `campus-written-test-generator` | "生成今日笔试题" |
 | 生成面试题（评分要点 + 连环追问） | `campus-ai-interview-builder` | "按我的项目出面试题" |
+| 快速读懂一个开源项目的代码与架构 | `project-code-qa` | "帮我分析这个仓库的架构" |
+| 为 B 站视频生成标题、简介、Tag 等发布物料 | `bilibili-video-copywriting` | "给这期视频出发布文案" |
 
 **简历类三者的分工**：`经历梳理` 从零提炼素材（口述 → 简历表述，缺数据用「XX」占位绝不编造）；`campus-resume-optimizer` 单次改写已有简历（STAR 重构 + 五项交叉审核）；`resume-continuous-optimizer` 周期性维护（多版本审核 + 代码事实核实 + 同步更新）。
 
@@ -33,6 +35,12 @@
 ### campus-ai-interview-builder
 校招面试题生成器，模拟面试官视角出题。有项目时题目强制锚定真实模块（标注【项目锚点】，只引用可核实信息）；无项目时第 2 题自动降级为通用项目场景题。生成后做 16 题考点交叉检查，防止四岗位重复考察同一考点。
 
+### project-code-qa
+项目代码问答助手。快速并深入地了解开源项目或 AI 开发的应用：代码逻辑、开发思路、架构设计、技术栈选择等。只读取证，结论必附文件:行号证据，带三级可信度标注，不擅改用户代码。
+
+### bilibili-video-copywriting
+B 站 UP「正在努力的小chen」专属发布物料生成助手，以 AI 技术内容为主、支持扩展学习/经验/生活等新主题类别。输入视频主题/要点/思维导图 PDF/B 站链接，输出三套成套发布物料（干货科普主投稿版 / 短视频切片流量版 / 深度版），每套含 3 个标题 + 简介 + Tag 列表，附可选置顶评论。
+
 ## 安装
 
 ### WorkBuddy
@@ -51,6 +59,8 @@
 | resume-continuous-optimizer | Read / Write / Grep / Glob / WebFetch | 读简历与代码、核实后更新 |
 | campus-written-test-generator | Read / Write / Grep / Glob | 读取项目资料、指定路径落盘 |
 | campus-ai-interview-builder | Read / Write / Grep / Glob / WebFetch | 额外支持通过 URL 读取项目 README |
+| project-code-qa | Read / Glob / Grep | 只读检索仓库代码，输出带证据的分析结论 |
+| bilibili-video-copywriting | Read / WebFetch / WebSearch | 读取素材文件、支持通过链接抓取视频信息 |
 
 ## 设计原则
 
@@ -59,12 +69,14 @@
 - **缺参不反问**：题库类 skill 所有参数可选，缺省自动降级，适合接入定时自动化
 - **修改先确认**：涉及文档修改的 skill 一律先汇报审核结果，用户确认后才执行
 - **客观无褒贬**：命题与解析不对任何公司、技术、产品做主观褒贬
+- **证据可溯源**：代码分析类 skill 的每条结论必附文件:行号证据并标注可信度
 
 ## 目录结构
 
 ```
 my_skill/
 ├── README.md                          # 本文件
+├── AGENTS.md                          # 仓库级写作与行为规范
 ├── LICENSE                            # MIT
 ├── 经历梳理/
 │   └── SKILL.md
@@ -78,11 +90,15 @@ my_skill/
 │   └── references/
 │       ├── 考点库.md
 │       └── 输出示例.md
-└── campus-ai-interview-builder/
-    ├── SKILL.md
-    └── references/
-        ├── 考点库.md
-        └── 输出示例.md
+├── campus-ai-interview-builder/
+│   ├── SKILL.md
+│   └── references/
+│       ├── 考点库.md
+│       └── 输出示例.md
+├── project-code-qa/
+│   └── SKILL.md
+└── bilibili-video-copywriting/
+    └── SKILL.md
 ```
 
 ## 许可证
